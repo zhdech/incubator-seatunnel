@@ -48,10 +48,7 @@ import io.airlift.compress.lzo.LzopCodec;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -149,6 +146,13 @@ public class LocalFileIT extends TestSuiteBase {
                         "/seatunnel/read/tar_gz/txt/multifile/multiTarGz.tar.gz",
                         container);
 
+                Path txtGz =
+                        convertToGzFile(
+                                Lists.newArrayList(ContainerUtil.getResourcesFile("/text/e2e.txt")),
+                                "e2e-txt");
+                ContainerUtil.copyFileIntoContainers(
+                        txtGz, "/seatunnel/read/gz/txt/single/e2e-txt.gz", container);
+
                 Path jsonZip =
                         convertToZipFile(
                                 Lists.newArrayList(
@@ -167,6 +171,13 @@ public class LocalFileIT extends TestSuiteBase {
                         multiJsonZip,
                         "/seatunnel/read/zip/json/multifile/multiJson.zip",
                         container);
+
+                Path jsonGz =
+                        convertToGzFile(
+                                Lists.newArrayList(ContainerUtil.getResourcesFile("/text/e2e.json")),
+                                "e2e-json");
+                ContainerUtil.copyFileIntoContainers(
+                        jsonGz, "/seatunnel/read/gz/json/single/e2e-json.gz", container);
 
                 ContainerUtil.copyFileIntoContainers(
                         "/text/e2e_gbk.txt",
@@ -192,6 +203,14 @@ public class LocalFileIT extends TestSuiteBase {
                                 "e2e-xml");
                 ContainerUtil.copyFileIntoContainers(
                         xmlZip, "/seatunnel/read/zip/xml/single/e2e-xml.zip", container);
+
+                Path xmlGz =
+                        convertToGzFile(
+                                Lists.newArrayList(ContainerUtil.getResourcesFile("/text/e2e.xml")),
+                                "e2e-xml");
+                ContainerUtil.copyFileIntoContainers(
+                        xmlGz, "/seatunnel/read/gz/xml/single/e2e-xml.gz", container);
+
 
                 Path txtLzo = convertToLzoFile(ContainerUtil.getResourcesFile("/text/e2e.txt"));
                 ContainerUtil.copyFileIntoContainers(
@@ -223,6 +242,13 @@ public class LocalFileIT extends TestSuiteBase {
                         multiXlsxZip,
                         "/seatunnel/read/zip/excel/multifile/multiZip.zip",
                         container);
+
+                Path xlsxGz =
+                        convertToGzFile(
+                                Lists.newArrayList(ContainerUtil.getResourcesFile("/text/e2e.xlsx")),
+                                "e2e-xlsx");
+                ContainerUtil.copyFileIntoContainers(
+                        xlsxGz, "/seatunnel/read/gz/xlsx/single/e2e-xlsx.gz", container);
 
                 ContainerUtil.copyFileIntoContainers(
                         "/orc/e2e.orc",
@@ -313,6 +339,7 @@ public class LocalFileIT extends TestSuiteBase {
         /** Compressed file test */
         // test read single local text file with zip compression
         helper.execute("/text/local_file_zip_text_to_assert.conf");
+        helper.execute("/text/local_file_gz_text_to_assert.conf");
         // test read multi local text file with zip compression
         helper.execute("/text/local_file_multi_zip_text_to_assert.conf");
         // test read single local text file with tar compression
@@ -325,12 +352,15 @@ public class LocalFileIT extends TestSuiteBase {
         helper.execute("/text/local_file_multi_tar_gz_text_to_assert.conf");
         // test read single local json file with zip compression
         helper.execute("/json/local_file_json_zip_to_assert.conf");
+        helper.execute("/json/local_file_json_gz_to_assert.conf");
         // test read multi local json file with zip compression
         helper.execute("/json/local_file_json_multi_zip_to_assert.conf");
         // test read single local xml file with zip compression
         helper.execute("/xml/local_file_zip_xml_to_assert.conf");
+        helper.execute("/xml/local_file_gz_xml_to_assert.conf");
         // test read single local excel file with zip compression
         helper.execute("/excel/local_excel_zip_to_assert.conf");
+        helper.execute("/excel/local_excel_gz_to_assert.conf");
         // test read multi local excel file with zip compression
         helper.execute("/excel/local_excel_multi_zip_to_assert.conf");
     }
@@ -550,5 +580,30 @@ public class LocalFileIT extends TestSuiteBase {
         }
 
         return tarGzFilePath;
+    }
+
+    public Path convertToGzFile(List<File> files, String name) throws IOException {
+        if (files == null || files.isEmpty()) {
+            throw new IllegalArgumentException("File list is empty or invalid");
+        }
+
+        File firstFile = files.get(0);
+        Path gzFilePath = Paths.get(firstFile.getParent(), String.format("%s.gz", name));
+
+        try (FileInputStream fis = new FileInputStream(firstFile);
+             FileOutputStream fos = new FileOutputStream(gzFilePath.toFile());
+             GZIPOutputStream gzos = new GZIPOutputStream(fos)) {
+
+            byte[] buffer = new byte[2048];
+            int length;
+
+            while ((length = fis.read(buffer)) > 0) {
+                gzos.write(buffer, 0, length);
+            }
+            gzos.finish();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return gzFilePath;
     }
 }
