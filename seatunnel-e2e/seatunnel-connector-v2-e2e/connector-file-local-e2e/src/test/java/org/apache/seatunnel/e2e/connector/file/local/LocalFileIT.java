@@ -48,6 +48,11 @@ import io.airlift.compress.lzo.LzopCodec;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -591,8 +596,8 @@ public class LocalFileIT extends TestSuiteBase {
         Path gzFilePath = Paths.get(firstFile.getParent(), String.format("%s.gz", name));
 
         try (FileInputStream fis = new FileInputStream(firstFile);
-                FileOutputStream fos = new FileOutputStream(gzFilePath.toFile());
-                GZIPOutputStream gzos = new GZIPOutputStream(fos)) {
+             FileOutputStream fos = new FileOutputStream(gzFilePath.toFile());
+             GZIPOutputStream gzos = new GZIPOutputStream(fos)) {
 
             byte[] buffer = new byte[2048];
             int length;
