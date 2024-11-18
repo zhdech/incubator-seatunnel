@@ -154,9 +154,9 @@ public class LocalFileIT extends TestSuiteBase {
                 Path txtGz =
                         convertToGzFile(
                                 Lists.newArrayList(ContainerUtil.getResourcesFile("/text/e2e.txt")),
-                                "e2e-txt");
+                                "e2e-txt-gz");
                 ContainerUtil.copyFileIntoContainers(
-                        txtGz, "/seatunnel/read/gz/txt/single/e2e-txt.gz", container);
+                        txtGz, "/seatunnel/read/gz/txt/single/e2e-txt-gz.gz", container);
 
                 Path jsonZip =
                         convertToZipFile(
@@ -181,9 +181,9 @@ public class LocalFileIT extends TestSuiteBase {
                         convertToGzFile(
                                 Lists.newArrayList(
                                         ContainerUtil.getResourcesFile("/json/e2e.json")),
-                                "e2e-json");
+                                "e2e-json-gz");
                 ContainerUtil.copyFileIntoContainers(
-                        jsonGz, "/seatunnel/read/gz/json/single/e2e-json.gz", container);
+                        jsonGz, "/seatunnel/read/gz/json/single/e2e-json-gz.gz", container);
 
                 ContainerUtil.copyFileIntoContainers(
                         "/text/e2e_gbk.txt",
@@ -213,9 +213,9 @@ public class LocalFileIT extends TestSuiteBase {
                 Path xmlGz =
                         convertToGzFile(
                                 Lists.newArrayList(ContainerUtil.getResourcesFile("/xml/e2e.xml")),
-                                "e2e-xml");
+                                "e2e-xml-gz");
                 ContainerUtil.copyFileIntoContainers(
-                        xmlGz, "/seatunnel/read/gz/xml/single/e2e-xml.gz", container);
+                        xmlGz, "/seatunnel/read/gz/xml/single/e2e-xml-gz.gz", container);
 
                 Path txtLzo = convertToLzoFile(ContainerUtil.getResourcesFile("/text/e2e.txt"));
                 ContainerUtil.copyFileIntoContainers(
@@ -252,9 +252,9 @@ public class LocalFileIT extends TestSuiteBase {
                         convertToGzFile(
                                 Lists.newArrayList(
                                         ContainerUtil.getResourcesFile("/excel/e2e.xlsx")),
-                                "e2e-xlsx");
+                                "e2e-xlsx-gz");
                 ContainerUtil.copyFileIntoContainers(
-                        xlsxGz, "/seatunnel/read/gz/excel/single/e2e-xlsx.gz", container);
+                        xlsxGz, "/seatunnel/read/gz/excel/single/e2e-xlsx-gz.gz", container);
 
                 ContainerUtil.copyFileIntoContainers(
                         "/orc/e2e.orc",
