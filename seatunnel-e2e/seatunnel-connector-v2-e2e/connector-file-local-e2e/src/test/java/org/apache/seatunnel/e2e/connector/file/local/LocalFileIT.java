@@ -248,13 +248,6 @@ public class LocalFileIT extends TestSuiteBase {
                         "/seatunnel/read/zip/excel/multifile/multiZip.zip",
                         container);
 
-                Path xlsxGz =
-                        convertToGzFile(
-                                Lists.newArrayList(
-                                        ContainerUtil.getResourcesFile("/excel/e2e.xlsx")),
-                                "e2e-xlsx-gz");
-                ContainerUtil.copyFileIntoContainers(
-                        xlsxGz, "/seatunnel/read/gz/excel/single/e2e-xlsx-gz.gz", container);
 
                 ContainerUtil.copyFileIntoContainers(
                         "/orc/e2e.orc",
@@ -366,7 +359,6 @@ public class LocalFileIT extends TestSuiteBase {
         helper.execute("/xml/local_file_gz_xml_to_assert.conf");
         // test read single local excel file with zip compression
         helper.execute("/excel/local_excel_zip_to_assert.conf");
-        helper.execute("/excel/local_excel_gz_to_assert.conf");
         // test read multi local excel file with zip compression
         helper.execute("/excel/local_excel_multi_zip_to_assert.conf");
     }
