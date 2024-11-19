@@ -248,7 +248,6 @@ public class LocalFileIT extends TestSuiteBase {
                         "/seatunnel/read/zip/excel/multifile/multiZip.zip",
                         container);
 
-
                 ContainerUtil.copyFileIntoContainers(
                         "/orc/e2e.orc",
                         "/seatunnel/read/orc/name=tyrantlucifer/hobby=coding/e2e.orc",
