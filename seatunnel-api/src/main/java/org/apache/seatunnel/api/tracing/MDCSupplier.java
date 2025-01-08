@@ -15,16 +15,27 @@
  * limitations under the License.
  */
 
-package org.apache.seatunnel.transform.nlpmodel.embadding.remote;
+package org.apache.seatunnel.api.tracing;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.function.Supplier;
 
-public interface Model extends Closeable {
+public class MDCSupplier<T> implements Supplier<T> {
+    private final MDCContext context;
+    private final Supplier<T> delegate;
 
-    List<ByteBuffer> vectorization(Object[] fields) throws IOException;
+    public MDCSupplier(Supplier<T> delegate) {
+        this(MDCContext.current(), delegate);
+    }
 
-    Integer dimension() throws IOException;
+    public MDCSupplier(MDCContext context, Supplier<T> delegate) {
+        this.context = context;
+        this.delegate = delegate;
+    }
+
+    @Override
+    public T get() {
+        try (MDCContext ignored = context.activate()) {
+            return delegate.get();
+        }
+    }
 }
