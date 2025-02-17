@@ -19,7 +19,7 @@ package org.apache.seatunnel.engine.server.dag.physical;
 
 import org.apache.seatunnel.shade.com.google.common.collect.Lists;
 
-import org.apache.seatunnel.api.env.EnvCommonOptions;
+import org.apache.seatunnel.api.options.EnvCommonOptions;
 import org.apache.seatunnel.api.sink.SinkAggregatedCommitter;
 import org.apache.seatunnel.engine.common.config.server.QueueType;
 import org.apache.seatunnel.engine.common.utils.IdGenerator;
@@ -330,7 +330,7 @@ public class PhysicalPlanGenerator {
                                             (PhysicalExecutionFlow) nextFlow;
                                     SinkAction sinkAction = (SinkAction) sinkFlow.getAction();
                                     String sinkTableId =
-                                            sinkAction.getConfig().getMultipleRowTableId();
+                                            sinkAction.getConfig().getTablePath().toString();
 
                                     long taskIDPrefix = idGenerator.getNextId();
                                     long taskGroupIDPrefix = idGenerator.getNextId();
